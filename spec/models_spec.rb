@@ -1,5 +1,5 @@
-require File.join(File.dirname(__FILE__), "model_factory")
-require File.join(File.dirname(__FILE__), "spec_helper")
+require File.expand_path("../model_factory", __FILE__)
+require File.expand_path("../spec_helper", __FILE__)
 
 module ModelMatchers
   class HavePage
@@ -114,6 +114,22 @@ describe "Page", :shared => true do
     end
   end
   
+  describe "when listing menu items" do
+    before(:each) do
+      @page = create_page(:path => "page-1")
+    end
+
+    it "should include pages that exist" do
+      create_menu(@page.path)
+      Page.menu_items.should == [@page]
+    end
+
+    it "should not include pages that don't exist" do
+      create_menu(@page.path, "no-such-page")
+      Page.menu_items.should == [@page]
+    end
+  end
+
   describe "when finding articles" do
     before(:each) do
       create_article(:heading => "Article 1", :path => "article-1")
